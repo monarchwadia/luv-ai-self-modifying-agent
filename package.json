@@ -1,0 +1,23 @@
+{
+  "name": "luv-ai-self-modifying-agent",
+  "version": "0.1.0",
+  "description": "A tiny self-modifying CLI agent built on luv-ai and Bun.",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "selfmod": "index.ts"
+  },
+  "scripts": {
+    "start": "bun run index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "luv-ai": "^0.1.0"
+  }
+}
