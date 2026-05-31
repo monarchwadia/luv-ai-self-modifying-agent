@@ -1,4 +1,4 @@
-# selfmod
+# luv-ai-self-modifying-agent
 
 A tiny **self-modifying CLI agent**. You clone it, run it, and then talk to it —
 it can read and rewrite its own source code (`index.ts`) using built-in tools.
