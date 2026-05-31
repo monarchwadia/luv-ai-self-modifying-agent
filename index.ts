@@ -196,75 +196,25 @@ function summarize(args: Record<string, any>): string {
     .join(", ");
 }
 
-// --- modal REPL --------------------------------------------------------------
-// Two modes, vim-style:
-//   NORMAL — the "other mode": command keys, no message is sent.
-//   INSERT — the input mode: type a line + Enter to send it to the agent.
-
-type Mode = "NORMAL" | "INSERT";
-let mode: Mode = "NORMAL";
-
-const PROMPTS: Record<Mode, string> = {
-  NORMAL: "[normal] ›",
-  INSERT: "[insert] ›",
-};
-
-function printNormalHelp(): void {
-  console.log(
-    "NORMAL mode — commands:\n" +
-      "  i    enter INSERT mode (start typing a message)\n" +
-      "  :    enter INSERT mode too (alias)\n" +
-      "  q    quit\n" +
-      "  ?    show this help\n",
-  );
-}
+// --- REPL --------------------------------------------------------------------
+// Simple text input: type a line, press Enter, and it's sent to the agent.
 
 console.log("selfmod — a self-modifying CLI agent (luv-ai + Bun)");
 console.log(`model: ${MODEL}`);
-console.log(
-  "Modal REPL: starts in NORMAL mode. Press `i` to enter INSERT mode and type.\n" +
-    "In INSERT mode, submit an empty line (just Enter) to return to NORMAL. `q` quits.\n",
-);
+console.log("Type a message. Ask me to change my own code. Ctrl-D or 'exit' to quit.\n");
 
-loop: while (true) {
-  const line = prompt(PROMPTS[mode]);
-  if (line === null) break; // Ctrl-D
-
-  if (mode === "NORMAL") {
-    const cmd = line.trim();
-    switch (cmd) {
-      case "":
-        continue;
-      case "i":
-      case ":":
-      case "a":
-        mode = "INSERT";
-        continue;
-      case "q":
-      case "quit":
-      case "exit":
-        break loop;
-      case "?":
-      case "h":
-        printNormalHelp();
-        continue;
-      default:
-        console.log(`(NORMAL) unknown command '${cmd}'. Press i to type, ? for help, q to quit.`);
-        continue;
+process.stdout.write("you › ");
+for await (const line of console) {
+  const text = line.trim();
+  if (text === "exit" || text === "quit") break;
+  if (text !== "") {
+    try {
+      await runTurn(text);
+    } catch (err) {
+      console.error(`\n[error] ${(err as Error).message}\n`);
     }
   }
-
-  // INSERT mode
-  if (line.trim() === "") {
-    // empty line returns to NORMAL, like pressing Esc
-    mode = "NORMAL";
-    continue;
-  }
-  try {
-    await runTurn(line);
-  } catch (err) {
-    console.error(`\n[error] ${(err as Error).message}\n`);
-  }
+  process.stdout.write("you › ");
 }
 
 console.log("\nbye.");

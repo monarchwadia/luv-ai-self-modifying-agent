@@ -10,7 +10,7 @@ type + Anthropic morphism) and [Bun](https://bun.com).
 
 ```bash
 # 1. Clone
-git clone <this-repo-url> selfmod
+git clone https://github.com/monarchwadia/luv-ai-self-modifying-agent selfmod
 cd selfmod
 
 # 2. Install deps
@@ -28,7 +28,7 @@ You'll get an interactive prompt:
 
 ```
 selfmod — a self-modifying CLI agent (luv-ai + Bun)
-model: claude-sonnet-4-6
+model: claude-opus-4.8
 Type a message. Ask me to change my own code. Ctrl-D or 'exit' to quit.
 
 you › add a tool that tells the current time
